@@ -3,11 +3,12 @@ let lastSearched = JSON.parse(localStorage.getItem('lastSearched'));
 let searchedCities = storedSearchedCities !== null ? storedSearchedCities : [];
 let city;
 
-// Init app
+// Init application 
 displaySearchedCities();
 getWeather(lastSearched);
 getFiveDaysWeather(lastSearched);
 
+// this function set s
 function displaySearchedCities() {
   $('#searched-cities').empty();
   $('#city').val('');
@@ -21,7 +22,7 @@ function displaySearchedCities() {
   });
 }
 
-// Display weather
+// Display weather and made request to open weathermap
 async function getWeather(city) {
   const API_KEY = '71bd3c9de51567a495cc45c857ebcaf2';
 
@@ -38,7 +39,7 @@ async function getWeather(city) {
   let humidity = response.main.humidity;
   let windSpeed = response.wind.speed.toFixed(1);
 
-  // Display
+  // Display date using the moment function
   let displayCity = $("<h3 class = 'card-body'>").text(
     `${currentCity} (${moment().format('MM-DD-YYYY')})`
   );
@@ -65,7 +66,7 @@ async function getWeather(city) {
   let lat = response.coord.lat;
   let lon = response.coord.lon;
 
-  // Get & display UV API
+  // Get & display UV API usinga second API request
   let uvQueryURL = `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&APPID=${API_KEY}&units=imperial`;
 
   let uvResponse = await $.ajax({
@@ -160,7 +161,7 @@ $('#search-box').submit(function (e) {
   if (city === '') {
     alert('Please enter city');
   } else if (searchedCities.length >= 5) {
-    // to ensure we don't store more than the last five searched cities
+    // to ensure we don't store more than the last five searched cities in the search box
     if (!searchedCities.includes(city)) {
       searchedCities.shift();
       searchedCities.push(city);
@@ -171,7 +172,7 @@ $('#search-box').submit(function (e) {
     }
   }
 
-  // Save to local storage. I need to set the local storage.
+  // Save to and setitem to local storage using JSON. I need to set the local storage.
   localStorage.setItem('lastSearched', JSON.stringify(city));
   localStorage.setItem('searchedCities', JSON.stringify(searchedCities));
 
@@ -180,7 +181,7 @@ $('#search-box').submit(function (e) {
   getFiveDaysWeather(city);
 });
 
-// load past search
+// load past search and eval whether it is contain already in storage box
 $(document).on('click', function (e) {
   if (e.target.classList.contains('city')) {
     city = e.target.getAttribute('data-name');
